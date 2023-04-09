@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#000000">
-
+<!-- 사용 안하는 부분
     <TextView
         android:id="@+id/tv_db"
         android:layout_width="wrap_content"
@@ -31,8 +31,6 @@
         android:textSize = "24sp"
         android:textColor = "#FFFFFFFF"/>
 
-
-
     <EditText
         android:id="@+id/et_sensor"
         android:layout_width="wrap_content"
@@ -40,13 +38,14 @@
         android:hint="센서값_x 입력"
         android:textSize = "24sp"
         android:textColor = "#FFFFFFFF"/>
-
+-->
     <Button
         android:id="@+id/btn_sensor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="센서값_x 입력하기"
         android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"/>
+        android:textColor = "#FFFFFFFF"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

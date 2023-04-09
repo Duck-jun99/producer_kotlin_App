@@ -16,8 +16,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import com.kotlinstudy.kotlin_pydio.R
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -26,6 +25,7 @@ import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     val api by lazy { MyApi.create() }
 
     private lateinit var btnSensor : Button
-    private lateinit var etSensor : EditText
-    private lateinit var etLogID : EditText
 
     //아래 네줄은 센서를 위한 코드
     private lateinit var sensorManager: SensorManager
@@ -42,66 +40,78 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var moment_log_ID : Int = 0
     private var moment_sensor_x : Float = 0F
 
+    //Coroutine 사용
+    private val scope = CoroutineScope(Dispatchers.Default)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         btnSensor = findViewById<Button>(R.id.btn_sensor)
-        etLogID = findViewById<EditText>(R.id.et_log_id)
-        etSensor = findViewById<EditText>(R.id.et_sensor)
 
         //센서 매니저 초기화 코드
         initSensorManager()
 
-        moment_sensor_x
 
         btnSensor.setOnClickListener {
             Log.e("Log_ID, Sensor_x", "지금부터 1분간(delay값) 서버에 계속 값 전달")
 
-            //val Log_ID : String = etLogID.text.toString()
-            //val Sensor_x : String = etSensor.text.toString()
-            
-            //10초마다 
+            //10초마다
             // 1)Log_ID는 1씩 계속 증가,
             // Log_ID와 Sensor_x 값을 Server로 전송
-            val timer = fixedRateTimer(name = "Sensor Logger", period = 10000) {
-                moment_log_ID++
+            val timer = scope.launch {
+                repeat(6) {
 
-                val Log_ID : String = moment_log_ID.toString()
-                val Sensor_x : String = moment_sensor_x.toString()
+                    //moment_log_ID를 현재 시간으로 설정
+                    val moment_log_ID = generateLogID()
 
-                Log.e("Log_ID, Sensor_x", "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST")
+                    val Log_ID : String = moment_log_ID.toString()
+                    val Sensor_x : String = moment_sensor_x.toString()
 
-                //Post방식으로 서버에 전달할 데이터를 파라미터에 입력
-                //val postModel = PostModel(etLogID.text.toString(), etSensor.text.toString()) //사용 안함
-                api.insertData(Log_ID, Sensor_x).enqueue(object : Callback<PostModel>
-                {
+                    Log.e("Log_ID, Sensor_x", "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST")
 
-                    //서버 요청 성공
-                    override fun onResponse(call: Call<PostModel>, response: Response<PostModel>) {
-                        Log.e("Successful Message: ", "데이터 성공적으로 수신")
-                        Log.e("Result: ", response.body().toString())
-                    }
-                    //서버 요청 실패
-                    override fun onFailure(call: Call<PostModel>, t: Throwable)
+                    //Post방식으로 서버에 전달할 데이터를 파라미터에 입력
+                    //val postModel = PostModel(etLogID.text.toString(), etSensor.text.toString()) //사용 안함
+                    api.insertData(Log_ID, Sensor_x).enqueue(object : Callback<PostModel>
                     {
-                        Log.e("Error Message : ",  t.message.toString())
+
+                        //서버 요청 성공
+                        override fun onResponse(call: Call<PostModel>, response: Response<PostModel>) {
+                            Log.e("Successful Message: ", "데이터 성공적으로 수신")
+                            Log.e("Result: ", response.body().toString())
+                        }
+                        //서버 요청 실패
+                        override fun onFailure(call: Call<PostModel>, t: Throwable)
+                        {
+                            Log.e("Error Message : ",  t.message.toString())
+                        }
+                    })
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@MainActivity, "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST", Toast.LENGTH_SHORT).show()
                     }
-                })
 
-                runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST", Toast.LENGTH_SHORT).show()
+                    delay(10000)
                 }
-
-            }
-            runBlocking {
-                delay(60000) // 프로그램을 1분간 실행
-                timer.cancel() // 타이머 중단
             }
 
-
+            scope.launch {
+                delay(60000)
+                timer.cancel()
+            }
         }
+    }
+
+    private fun generateLogID(): String {
+        val currentTime = Calendar.getInstance()
+        val year = currentTime.get(Calendar.YEAR)
+        val month = currentTime.get(Calendar.MONTH) + 1
+        val day = currentTime.get(Calendar.DAY_OF_MONTH)
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = currentTime.get(Calendar.MINUTE)
+        val second = currentTime.get(Calendar.SECOND)
+        return "$year/$month/$day/$hour/$minute/$second/${currentTime.timeInMillis}"
     }
 
     private fun initSensorManager() {
@@ -111,9 +121,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor == accelerometerSensor) {
-            moment_sensor_x = event!!.values[0]
-
-            //Toast.makeText(applicationContext, sensor_x, Toast.LENGTH_SHORT).show()
+            scope.launch {
+                moment_sensor_x = event!!.values[0]
+            }
         }
     }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
