@@ -24,8 +24,10 @@ interface MyApi {
     )
     fun insertData(
         @Field("log_ID") log_ID: String,
-        @Field("sensor_x") sensor_x: String
-    
+        @Field("sensor_x") sensor_x: String,
+        @Field("sensor_y") sensor_y: String,
+        @Field("sensor_z") sensor_z: String
+
         //@Body data: PostModel
         //@Field를 사용하고 @FormUrlEncoded를 사용해야 올바른 Json형식으로 넘어감
     ): Call<PostModel>

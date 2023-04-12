@@ -33,15 +33,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     val api by lazy { MyApi.create() }
 
     private lateinit var btnSensor : Button
+    private lateinit var btnClose : Button
 
     //아래 네줄은 센서를 위한 코드
     private lateinit var sensorManager: SensorManager
     private var accelerometerSensor: Sensor? = null
     private var moment_log_ID : Int = 0
     private var moment_sensor_x : Float = 0F
+    private var moment_sensor_y : Float = 0F
+    private var moment_sensor_z : Float = 0F
 
     //Coroutine 사용
     private val scope = CoroutineScope(Dispatchers.Default)
+
+    private var timer: Job? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         setContentView(R.layout.activity_main)
 
         btnSensor = findViewById<Button>(R.id.btn_sensor)
+        btnClose = findViewById<Button>(R.id.btn_post_close)
 
         //센서 매니저 초기화 코드
         initSensorManager()
@@ -57,25 +63,26 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         btnSensor.setOnClickListener {
             Log.e("Log_ID, Sensor_x", "지금부터 1분간(delay값) 서버에 계속 값 전달")
 
-            //10초마다
-            // 1)Log_ID는 1씩 계속 증가,
+            //0.5초마다
+            // 1)Log_ID시간 적용
             // Log_ID와 Sensor_x 값을 Server로 전송
-            val timer = scope.launch {
-                repeat(6) {
+            timer = scope.launch {
+                repeat(120) {
 
                     //moment_log_ID를 현재 시간으로 설정
                     val moment_log_ID = generateLogID()
 
                     val Log_ID : String = moment_log_ID.toString()
                     val Sensor_x : String = moment_sensor_x.toString()
+                    val Sensor_y : String = moment_sensor_y.toString()
+                    val Sensor_z : String = moment_sensor_z.toString()
 
-                    Log.e("Log_ID, Sensor_x", "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST")
+                    Log.e("Log_ID, Sensor_x,y,z", "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n Sensor_y: $Sensor_y\n Sensor_z: $Sensor_z\n 4개 값 POST")
 
                     //Post방식으로 서버에 전달할 데이터를 파라미터에 입력
                     //val postModel = PostModel(etLogID.text.toString(), etSensor.text.toString()) //사용 안함
-                    api.insertData(Log_ID, Sensor_x).enqueue(object : Callback<PostModel>
+                    api.insertData(Log_ID, Sensor_x, Sensor_y, Sensor_z).enqueue(object : Callback<PostModel>
                     {
-
                         //서버 요청 성공
                         override fun onResponse(call: Call<PostModel>, response: Response<PostModel>) {
                             Log.e("Successful Message: ", "데이터 성공적으로 수신")
@@ -92,14 +99,20 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         Toast.makeText(this@MainActivity, "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST", Toast.LENGTH_SHORT).show()
                     }
 
-                    delay(10000)
+                    delay(500 /*10초: 10000*/)
                 }
             }
+        }
 
-            scope.launch {
-                delay(60000)
-                timer.cancel()
-            }
+
+        btnClose.setOnClickListener {
+
+            //타이머를 꺼서 post 중지
+            timer?.cancel()
+            timer = null
+
+            Toast.makeText(this, "Post 중지, 타이머 종료", Toast.LENGTH_SHORT).show()
+
         }
     }
 
@@ -123,6 +136,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         if (event?.sensor == accelerometerSensor) {
             scope.launch {
                 moment_sensor_x = event!!.values[0]
+                moment_sensor_y = event!!.values[1]
+                moment_sensor_z = event!!.values[2]
             }
         }
     }
@@ -136,5 +151,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onPause() {
         sensorManager.unregisterListener(this)
         super.onPause()
+
+        // 타이머 중지
+        timer?.cancel()
+        timer = null
     }
 }

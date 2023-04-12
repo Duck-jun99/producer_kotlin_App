@@ -14,5 +14,13 @@ data class PostModel(
 
     @Expose
     @SerializedName("sensor_x")
-    var sensor_x: String? = null
+    var sensor_x: String? = null,
+
+    @Expose
+    @SerializedName("sensor_y")
+    var sensor_y: String? = null,
+
+    @Expose
+    @SerializedName("sensor_z")
+    var sensor_z: String? = null
 )
