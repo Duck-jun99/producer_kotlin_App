@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     private lateinit var btnSensor : Button
     private lateinit var btnClose : Button
+    private lateinit var tvPostFirst : TextView
+    private lateinit var tvPostLast : TextView
 
     //아래 네줄은 센서를 위한 코드
     private lateinit var sensorManager: SensorManager
@@ -42,6 +44,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var moment_sensor_x : Float = 0F
     private var moment_sensor_y : Float = 0F
     private var moment_sensor_z : Float = 0F
+
+    private lateinit var Log_ID : String
+    private lateinit var Sensor_x : String
+    private lateinit var Sensor_y : String
+    private lateinit var Sensor_z : String
 
     //Coroutine 사용
     private val scope = CoroutineScope(Dispatchers.Default)
@@ -55,6 +62,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         btnSensor = findViewById<Button>(R.id.btn_sensor)
         btnClose = findViewById<Button>(R.id.btn_post_close)
+        tvPostFirst = findViewById(R.id.tv_post_first)
+        tvPostLast = findViewById(R.id.tv_post_last)
 
         //센서 매니저 초기화 코드
         initSensorManager()
@@ -70,14 +79,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 repeat(120) {
 
                     //moment_log_ID를 현재 시간으로 설정
-                    val moment_log_ID = generateLogID()
+                    var moment_log_ID = generateLogID()
 
-                    val Log_ID : String = moment_log_ID.toString()
-                    val Sensor_x : String = moment_sensor_x.toString()
-                    val Sensor_y : String = moment_sensor_y.toString()
-                    val Sensor_z : String = moment_sensor_z.toString()
+                    Log_ID = moment_log_ID.toString()
+                    Sensor_x = moment_sensor_x.toString()
+                    Sensor_y = moment_sensor_y.toString()
+                    Sensor_z = moment_sensor_z.toString()
 
                     Log.e("Log_ID, Sensor_x,y,z", "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n Sensor_y: $Sensor_y\n Sensor_z: $Sensor_z\n 4개 값 POST")
+
+
+                    /*처음 timer 작동할 때 Log_ID를 tvPostFirst에 출력시키는 기능.
+                    ex) if( timer가 처음 시작된다면 ){ tvPostFirst에 Log_ID 출력}
+                    */
+                    //현재 작동하지 않는 문제 -> 수정이 필요한 부분
+                    if(timer?.isActive == false) {
+                        moment_log_ID = generateLogID()
+                        tvPostFirst.text = "최초 Log_ID: ${moment_log_ID}"
+                    }
+                    //
 
                     //Post방식으로 서버에 전달할 데이터를 파라미터에 입력
                     //val postModel = PostModel(etLogID.text.toString(), etSensor.text.toString()) //사용 안함
@@ -96,7 +116,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     })
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this@MainActivity, "Log_ID: $Log_ID,\n Sensor_x: $Sensor_x\n 두개 값 POST", Toast.LENGTH_SHORT).show()
                     }
 
                     delay(500 /*10초: 10000*/)
@@ -134,11 +154,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor == accelerometerSensor) {
-            scope.launch {
                 moment_sensor_x = event!!.values[0]
                 moment_sensor_y = event!!.values[1]
                 moment_sensor_z = event!!.values[2]
-            }
         }
     }
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
