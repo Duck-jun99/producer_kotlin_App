@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_recycler_logId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log_ID"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tv_recycler_sensorX"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sensor_x"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tv_recycler_sensorY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sensor_y"
+        android:textSize="15sp"/>
+
+    <TextView
+        android:id="@+id/tv_recycler_sensorZ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sensor_z"
+        android:textSize="15sp" />
+
+
+</LinearLayout>

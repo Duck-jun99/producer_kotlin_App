@@ -1,4 +1,4 @@
-package com.kotlinstudy.kotlin_pydio
+package com.kotlinstudy.producer_kotlin_App
 
 import org.junit.Test
 

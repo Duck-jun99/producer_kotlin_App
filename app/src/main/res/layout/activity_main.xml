@@ -21,21 +21,28 @@
         android:textSize="24sp"
         android:textColor = "#FFFFFFFF"
         android:layout_gravity="center"/>
-
-    <TextView
-        android:id="@+id/tv_post_first"
+    <Button
+        android:id="@+id/btn_db_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="최초 post 시각"
+        android:text="DB 모든 sensor 값 지우기"
         android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"/>
+        android:textColor = "#FFFFFFFF"
+        android:layout_gravity="center"/>
 
-    <TextView
-        android:id="@+id/tv_post_last"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/framelayout1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="마지막 post 시각"
-        android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"/>
+        android:layout_weight="3">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/dbdatalist_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.kotlinstudy.producer_kotlin_App.dbDataFragment" />
+
+
+    </FrameLayout>
 
 </LinearLayout>

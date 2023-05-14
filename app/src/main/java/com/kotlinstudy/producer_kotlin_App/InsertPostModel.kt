@@ -1,4 +1,4 @@
-package com.kotlinstudy.kotlin_pydio
+package com.kotlinstudy.producer_kotlin_App
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 //ex) array("Log_ID" => "$Log_ID" , "Sensor_x" => "$Sensor_x" )
 // * 위의 PHP 코드에서 "Log_ID" 부분이 serializedName('파라미터값')의 파라미터 값 입니다.
 
-data class PostModel(
+data class InsertPostModel(
     @Expose
     @SerializedName("log_ID")
     var log_ID: String? = null,

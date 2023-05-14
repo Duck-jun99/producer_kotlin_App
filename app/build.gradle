@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.kotlinstudy.kotlin_pydio'
+    namespace 'com.kotlinstudy.producer_kotlin_App'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.kotlinstudy.kotlin_pydio"
+        applicationId "com.kotlinstudy.producer_kotlin_App"
         minSdk 24
         targetSdk 33
         versionCode 1
