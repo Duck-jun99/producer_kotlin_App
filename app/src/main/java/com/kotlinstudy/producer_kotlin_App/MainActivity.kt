@@ -1,6 +1,7 @@
 package com.kotlinstudy.producer_kotlin_App
 
 import android.content.Context
+import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -24,8 +25,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var btnSensor : Button
     private lateinit var btnClose : Button
     private lateinit var btnDbDel : Button
-    private lateinit var tvPostFirst : TextView
-    private lateinit var tvPostLast : TextView
+    private lateinit var btnHelp : Button
 
     //센서를 위한 코드
     private lateinit var sensorManager: SensorManager
@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         btnSensor = findViewById<Button>(R.id.btn_sensor)
         btnClose = findViewById<Button>(R.id.btn_post_close)
         btnDbDel = findViewById<Button>(R.id.btn_db_delete)
+        btnHelp = findViewById<Button>(R.id.btn_help)
 
         //센서 매니저 초기화 코드
         initSensorManager()
@@ -132,6 +133,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             })
 
             Toast.makeText(this, "모든 데이터 삭제", Toast.LENGTH_SHORT).show()
+        }
+
+        btnHelp.setOnClickListener{
+            startActivity(Intent(this@MainActivity,HelpActivity::class.java))
         }
     }
 

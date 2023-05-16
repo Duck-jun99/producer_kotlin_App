@@ -3,46 +3,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000">
+    android:backgroundTint="@color/white">
 
-    <Button
-        android:id="@+id/btn_sensor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="가속도 센서값 전송"
-        android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"
-        android:layout_gravity="center"/>
-    <Button
-        android:id="@+id/btn_post_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="가속도 센서값 post 취소"
-        android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"
-        android:layout_gravity="center"/>
-    <Button
-        android:id="@+id/btn_db_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DB 모든 sensor 값 지우기"
-        android:textSize="24sp"
-        android:textColor = "#FFFFFFFF"
-        android:layout_gravity="center"/>
-
-    <FrameLayout
-        android:id="@+id/framelayout1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3">
+        android:orientation="vertical">
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/dbdatalist_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.kotlinstudy.producer_kotlin_App.dbDataFragment" />
+        <Button
+            android:id="@+id/btn_help"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/baseline_help_outline_24"
+            android:layout_gravity="right"/>
 
+    </LinearLayout>
 
-    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_sensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시작"
+            android:textSize="24sp"
+            android:textColor = "#FFFFFFFF"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/btn_post_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="종료"
+            android:textSize="24sp"
+            android:textColor = "#FFFFFFFF"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+        <Button
+            android:id="@+id/btn_db_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="캐시 삭제"
+            android:textSize="24sp"
+            android:textColor = "#FFFFFFFF"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

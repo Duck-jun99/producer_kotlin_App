@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.Kotlin_pydio" parent="Base.Theme.producer_kotlin_App" />
+
+    <style name="Theme.producer_kotlin_App" parent="Base.Theme.producer_kotlin_App" />
 </resources>

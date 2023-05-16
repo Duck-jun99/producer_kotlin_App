@@ -211,3 +211,4 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,android,androidstudio,kotlin
+/app/src/main/java/com/kotlinstudy/producer_kotlin_App/Secret.kt
