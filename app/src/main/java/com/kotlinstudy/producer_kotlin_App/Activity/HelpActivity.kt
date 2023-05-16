@@ -1,8 +1,8 @@
-package com.kotlinstudy.producer_kotlin_App
+package com.kotlinstudy.producer_kotlin_App.Activity
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kotlinstudy.producer_kotlin_App.R
 
 class HelpActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

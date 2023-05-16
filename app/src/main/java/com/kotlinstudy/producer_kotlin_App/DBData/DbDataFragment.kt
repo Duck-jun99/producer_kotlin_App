@@ -1,10 +1,11 @@
-package com.kotlinstudy.producer_kotlin_App
+package com.kotlinstudy.producer_kotlin_App.DBData
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.kotlinstudy.producer_kotlin_App.R
 
 class dbDataFragment : Fragment() {
 

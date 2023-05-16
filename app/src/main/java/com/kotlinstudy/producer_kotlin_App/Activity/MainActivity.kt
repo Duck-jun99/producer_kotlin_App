@@ -1,4 +1,4 @@
-package com.kotlinstudy.producer_kotlin_App
+package com.kotlinstudy.producer_kotlin_App.Activity
 
 import android.content.Context
 import android.content.Intent
@@ -8,10 +8,13 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import com.kotlinstudy.producer_kotlin_App.Network.DeleteApi
+import com.kotlinstudy.producer_kotlin_App.Network.InsertApi
+import com.kotlinstudy.producer_kotlin_App.Network.InsertPostModel
+import com.kotlinstudy.producer_kotlin_App.R
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Response
@@ -136,7 +139,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
 
         btnHelp.setOnClickListener{
-            startActivity(Intent(this@MainActivity,HelpActivity::class.java))
+            startActivity(Intent(this@MainActivity, HelpActivity::class.java))
         }
     }
 

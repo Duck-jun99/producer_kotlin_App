@@ -1,4 +1,4 @@
-package com.kotlinstudy.producer_kotlin_App
+package com.kotlinstudy.producer_kotlin_App.Network
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

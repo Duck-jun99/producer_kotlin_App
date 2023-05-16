@@ -1,7 +1,8 @@
-package com.kotlinstudy.producer_kotlin_App
+package com.kotlinstudy.producer_kotlin_App.Network
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.kotlinstudy.producer_kotlin_App.Secret
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
