@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     //timer 설정
     private var timer: Job? = null
+    private var timer2: Job? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         //센서 매니저 초기화 코드
         initSensorManager()
 
+
         btnSensor.setOnClickListener {
 
             Toast.makeText(this, "지금부터 1분간(delay값) 서버에 계속 값 전달", Toast.LENGTH_SHORT).show()
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             // 1)Log_ID시간 적용
             // Log_ID와 Sensor_x 값을 Server로 전송
             timer = scope.launch {
-                repeat(100) { //100번 반복
+                while(true) { //100번 반복
 
                     //moment_log_ID를 현재 시간으로 설정
                     var moment_log_ID = generateLogID()
@@ -106,6 +108,27 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     delay(100 /*10초: 10000*/)
                 }
             }
+
+            // 자동으로 1.5초 간격으로 데이터베이스에서 20개씩 데이터 삭제
+            timer2 = scope.launch {
+                while(true) {
+
+                    delete_api.deleteData().enqueue(object : Callback<InsertPostModel>
+                    {
+                        //서버 요청 성공
+                        override fun onResponse(call: Call<InsertPostModel>, response: Response<InsertPostModel>) {
+                            Log.e("Successful Message: ", "데이터 성공적으로 수신")
+                            Log.e("Result: ", response.body().toString())
+                        }
+                        //서버 요청 실패
+                        override fun onFailure(call: Call<InsertPostModel>, t: Throwable)
+                        {
+                            Log.e("Error Message : ",  t.message.toString())
+                        }
+                    })
+                    delay(1500 /*10초: 10000*/)
+                }
+            }
         }
 
 
@@ -113,7 +136,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
             //타이머를 꺼서 post 중지
             timer?.cancel()
+            timer2?.cancel()
             timer = null
+            timer2 = null
 
             Toast.makeText(this, "Post 중지, 타이머 종료", Toast.LENGTH_SHORT).show()
 
@@ -180,6 +205,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         // 타이머 중지
         timer?.cancel()
+        timer2?.cancel()
         timer = null
+        timer2 = null
     }
 }
